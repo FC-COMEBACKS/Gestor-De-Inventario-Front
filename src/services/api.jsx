@@ -222,3 +222,49 @@ export const eliminarProductoDelCarrito = async (idProducto) => {
         };
     }
 }
+
+export const listarCategorias = async (limite = 10, desde = 0) => {
+    try {
+        const response = await api.get(`/categoria/listarCategorias?limite=${limite}&desde=${desde}`);
+        return response;
+    } catch (err) {
+        console.error("❌ Error en listarCategorias:", err);
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const crearCategoria = async (data) => {
+    try {
+        return await api.post("/categoria/crearCategoria", data);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const editarCategoria = async (uid, data) => {
+    try {
+        return await api.put(`/categoria/editarCategoria/${uid}`, data);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const eliminarCategoria = async (uid) => {
+    try {
+        return await api.delete(`/categoria/eliminarCategoria/${uid}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}

@@ -27,6 +27,14 @@ export const routes = [
     element: <ProtectedRoute element={<CarritoPage />} />
   },
   {
+    path: '/categorias',
+    element: <ProtectedRoute element={<CategoriaPage />} adminOnly={true} />
+  },
+  {
+    path: '/categorias-cliente',
+    element: <ProtectedRoute element={<CategoriasClientePage />} />
+  },
+  {
     path: '/usuarios',
     element: <ProtectedRoute element={<UserPage />} adminOnly={true} />
   },
