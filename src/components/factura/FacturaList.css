@@ -1,0 +1,216 @@
+.factura-list-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.factura-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e1e5e9;
+}
+
+.header-title h2 {
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.usuario-seleccionado {
+    margin: 0;
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.header-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.filtros {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.estadisticas-facturas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.estadistica-card {
+    background: white;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.estadistica-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.estadistica-card.activa {
+    border-left: 4px solid #28a745;
+}
+
+.estadistica-card.anulada {
+    border-left: 4px solid #dc3545;
+}
+
+.estadistica-card.ventas {
+    border-left: 4px solid #007bff;
+}
+
+.estadistica-valor {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.estadistica-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.factura-list-content {
+    min-height: 300px;
+}
+
+.facturas-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.factura-list-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: #6c757d;
+}
+
+.factura-list-loading p {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+
+.factura-list-error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+}
+
+.error-message {
+    text-align: center;
+    padding: 2rem;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    background-color: #f8d7da;
+    color: #721c24;
+    max-width: 500px;
+}
+
+.error-message h3 {
+    margin: 0 0 1rem 0;
+    color: #721c24;
+}
+
+.error-message p {
+    margin-bottom: 1.5rem;
+    color: #721c24;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    margin: 0 0 1rem 0;
+    color: #495057;
+    font-size: 1.5rem;
+}
+
+.empty-state p {
+    margin-bottom: 1.5rem;
+    max-width: 400px;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .factura-list-container {
+        padding: 0.5rem;
+    }
+
+    .factura-list-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .header-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filtros {
+        width: 100%;
+    }
+
+    .estadisticas-facturas {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .estadistica-card {
+        padding: 1rem;
+    }
+
+    .estadistica-valor {
+        font-size: 1.5rem;
+    }
+
+    .header-title h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .estadisticas-facturas {
+        grid-template-columns: 1fr;
+    }
+    
+    .facturas-grid {
+        gap: 0.75rem;
+    }
+}
