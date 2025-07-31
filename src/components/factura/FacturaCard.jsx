@@ -1,434 +1,217 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { FacturaDetail } from './FacturaDetail';
-import { ProductIcon } from '../productos';
-import { descargarFacturaPDF } from '../../services/api';
+import { Modal } from '../ui/Modal';
+import { anularFactura, descargarFacturaPDF } from '../../services/api';
+import './FacturaCard.css';
 
-export const FacturaCard = ({ 
-    factura, 
-    onAnular, 
-    showActions = true,
-    isAdmin = false 
-}) => {
-    const [showDetail, setShowDetail] = useState(false);
-    const [downloading, setDownloading] = useState(false);
+export const FacturaCard = ({ factura, onUpdate, userRole }) => {
+    const [showAnularModal, setShowAnularModal] = useState(false);
+    const [motivo, setMotivo] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const formatearFecha = (fecha) => {
-        return new Date(fecha).toLocaleDateString('es-GT', {
+    const formatDate = (date) => {
+        return new Date(date).toLocaleDateString('es-GT', {
             year: 'numeric',
-            month: 'short',
+            month: 'long',
             day: 'numeric',
             hour: '2-digit',
             minute: '2-digit'
         });
     };
 
-    const obtenerEstadoColor = (estado) => {
-        return estado === 'ACTIVA' ? '#27ae60' : '#e74c3c';
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('es-GT', {
+            style: 'currency',
+            currency: 'GTQ'
+        }).format(amount);
     };
 
-    const obtenerEstadoIcono = (estado) => {
-        return estado === 'ACTIVA' ? '✅' : '❌';
-    };
+    const handleAnularFactura = async () => {
+        if (!motivo.trim()) {
+            alert('Por favor ingresa un motivo para la anulación');
+            return;
+        }
 
-    const obtenerIdCorto = (id) => {
-        return id ? id.slice(-8).toUpperCase() : 'N/A';
-    };
+        setLoading(true);
+        try {
+            const response = await anularFactura(factura._id, motivo);
+            
+            if (response.error) {
+                throw new Error(response.err?.response?.data?.message || 'Error al anular factura');
+            }
 
-    const handleAnular = () => {
-        if (onAnular) {
-            onAnular(factura._id);
+            alert('Factura anulada exitosamente');
+            setShowAnularModal(false);
+            setMotivo('');
+            if (onUpdate) onUpdate();
+        } catch (error) {
+            console.error('Error al anular factura:', error);
+            alert(error.message || 'Error al anular la factura');
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleDescargarPDF = async () => {
-        setDownloading(true);
+        setLoading(true);
         try {
-            const result = await descargarFacturaPDF(factura._id);
-            if (result.error) {
-                console.log('Error en descarga:', result.message);
-            } else if (result.success) {
-                console.log('PDF descargado exitosamente');
+            const response = await descargarFacturaPDF(factura._id);
+            
+            if (response.error) {
+                throw new Error(response.err?.response?.data?.message || 'Error al descargar PDF');
             }
+
+            // Crear un blob con la respuesta y descargarlo
+            const blob = new Blob([response.data], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Factura_${factura._id.slice(-8).toUpperCase()}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
         } catch (error) {
-            console.error('Error descargando PDF:', error);
-            alert('Error inesperado al intentar descargar el PDF.');
+            console.error('Error al descargar PDF:', error);
+            alert(error.message || 'Error al descargar el PDF');
         } finally {
-            setDownloading(false);
+            setLoading(false);
         }
     };
+
+    const getEstadoClass = (estado) => {
+        return estado === 'ACTIVA' ? 'estado-activa' : 'estado-anulada';
+    };
+
+    const nombreCliente = factura.idUsuario 
+        ? `${factura.idUsuario.name} ${factura.idUsuario.surname}`
+        : 'Cliente no disponible';
 
     return (
         <>
             <Card className="factura-card">
-                <div className="factura-card__header">
-                    <div className="factura-card__info">
-                        <h3 className="factura-card__id">
-                            📋 Factura #{obtenerIdCorto(factura._id)}
+                <div className="factura-header">
+                    <div className="factura-info">
+                        <h3 className="factura-numero">
+                            Factura #{factura._id.slice(-8).toUpperCase()}
                         </h3>
-                        <div className="factura-card__meta">
-                            <span className="factura-card__fecha">
-                                📅 {formatearFecha(factura.fecha)}
-                            </span>
-                            <span 
-                                className="factura-card__estado"
-                                style={{ color: obtenerEstadoColor(factura.estado) }}
-                            >
-                                {obtenerEstadoIcono(factura.estado)} {factura.estado}
-                            </span>
-                        </div>
-                    </div>
-                    <div className="factura-card__total">
-                        <span className="factura-card__total-label">Total:</span>
-                        <span className="factura-card__total-amount">
-                            Q{factura.total.toFixed(2)}
+                        <span className={`factura-estado ${getEstadoClass(factura.estado)}`}>
+                            {factura.estado}
                         </span>
+                    </div>
+                    <div className="factura-fecha">
+                        {formatDate(factura.fecha)}
                     </div>
                 </div>
 
-                {}
-                {factura.idUsuario && (
-                    <div className="factura-card__cliente">
-                        <span className="factura-card__cliente-label">👤 Cliente:</span>
-                        <span className="factura-card__cliente-name">
-                            {factura.idUsuario.name} {factura.idUsuario.surname}
-                        </span>
-                        {factura.idUsuario.email && (
-                            <span className="factura-card__cliente-email">
-                                ({factura.idUsuario.email})
-                            </span>
-                        )}
+                <div className="factura-body">
+                    <div className="factura-cliente">
+                        <strong>Cliente:</strong> {nombreCliente}
                     </div>
-                )}
+                    
+                    <div className="factura-productos">
+                        <strong>Productos ({factura.productos.length}):</strong>
+                        <div className="productos-list">
+                            {factura.productos.slice(0, 3).map((producto, index) => (
+                                <div key={index} className="producto-item">
+                                    <span className="producto-nombre">
+                                        {producto.nombreProducto}
+                                    </span>
+                                    <span className="producto-cantidad">
+                                        x{producto.cantidad}
+                                    </span>
+                                    <span className="producto-precio">
+                                        {formatCurrency(producto.precioProducto)}
+                                    </span>
+                                </div>
+                            ))}
+                            {factura.productos.length > 3 && (
+                                <div className="mas-productos">
+                                    ... y {factura.productos.length - 3} más
+                                </div>
+                            )}
+                        </div>
+                    </div>
 
-                {}
-                <div className="factura-card__productos">
-                    <div className="factura-card__productos-header">
-                        📦 Productos ({factura.productos.length}):
+                    <div className="factura-total">
+                        <strong>Total: {formatCurrency(factura.total)}</strong>
                     </div>
-                    <div className="factura-card__productos-list">
-                        {factura.productos.slice(0, 3).map((producto, index) => (
-                            <div key={index} className="factura-card__producto-item">
-                                <ProductIcon 
-                                    nombreProducto={producto.nombreProducto} 
-                                    size="small" 
-                                />
-                                <span className="factura-card__producto-nombre">
-                                    {producto.nombreProducto}
-                                </span>
-                                <span className="factura-card__producto-cantidad">
-                                    x{producto.cantidad}
-                                </span>
-                                <span className="factura-card__producto-precio">
-                                    Q{(producto.precioProducto * producto.cantidad).toFixed(2)}
-                                </span>
+
+                    {factura.estado === 'ANULADA' && (
+                        <div className="factura-anulacion">
+                            <div className="anulacion-fecha">
+                                <strong>Anulada:</strong> {formatDate(factura.fechaAnulacion)}
                             </div>
-                        ))}
-                        {factura.productos.length > 3 && (
-                            <div className="factura-card__producto-item--more">
-                                <span>... y {factura.productos.length - 3} productos más</span>
+                            <div className="anulacion-motivo">
+                                <strong>Motivo:</strong> {factura.motivoAnulacion}
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
 
-                {}
-                {factura.estado === 'ANULADA' && (
-                    <div className="factura-card__anulacion">
-                        <div className="factura-card__anulacion-header">
-                            ⚠️ Factura Anulada
-                        </div>
-                        <div className="factura-card__anulacion-info">
-                            <span>📅 {formatearFecha(factura.fechaAnulacion)}</span>
-                            {factura.motivoAnulacion && (
-                                <span>📝 {factura.motivoAnulacion}</span>
-                            )}
-                        </div>
-                    </div>
-                )}
-
-                {}
-                {showActions && (
-                    <div className="factura-card__actions">
-                        <Button
-                            variant="outline"
-                            size="small"
-                            onClick={() => setShowDetail(!showDetail)}
+                <div className="factura-actions">
+                    <Button 
+                        variant="outline" 
+                        onClick={handleDescargarPDF}
+                        disabled={loading}
+                    >
+                        📄 Descargar PDF
+                    </Button>
+                    
+                    {factura.estado === 'ACTIVA' && (userRole === 'ADMIN_ROLE' || userRole === 'USER_ROLE') && (
+                        <Button 
+                            variant="danger" 
+                            onClick={() => setShowAnularModal(true)}
+                            disabled={loading}
                         >
-                            {showDetail ? '🔼 Ocultar Detalle' : '👁️ Ver Detalle'}
+                            ❌ Anular
                         </Button>
-
-                        <Button
-                            variant="success"
-                            size="small"
-                            onClick={handleDescargarPDF}
-                            disabled={downloading}
-                        >
-                            {downloading ? (
-                                <>⏳ Descargando...</>
-                            ) : (
-                                <>📄 Descargar PDF</>
-                            )}
-                        </Button>
-
-                        {isAdmin && factura.estado === 'ACTIVA' && (
-                            <Button
-                                variant="danger"
-                                size="small"
-                                onClick={handleAnular}
-                            >
-                                ❌ Anular
-                            </Button>
-                        )}
-                    </div>
-                )}
+                    )}
+                </div>
             </Card>
 
-            {}
-            {showDetail && (
-                <div className="factura-card__detail-expansion">
-                    <FacturaDetail factura={factura} />
-                </div>
+            {showAnularModal && (
+                <Modal
+                    title="Anular Factura"
+                    onClose={() => setShowAnularModal(false)}
+                >
+                    <div className="anular-modal-content">
+                        <p>¿Estás seguro de que deseas anular esta factura?</p>
+                        <p><strong>Factura:</strong> #{factura._id.slice(-8).toUpperCase()}</p>
+                        <p><strong>Total:</strong> {formatCurrency(factura.total)}</p>
+                        
+                        <div className="form-group">
+                            <label htmlFor="motivo">Motivo de anulación:</label>
+                            <textarea
+                                id="motivo"
+                                value={motivo}
+                                onChange={(e) => setMotivo(e.target.value)}
+                                placeholder="Ingresa el motivo de la anulación"
+                                rows={3}
+                                required
+                            />
+                        </div>
+
+                        <div className="modal-actions">
+                            <Button 
+                                variant="outline" 
+                                onClick={() => setShowAnularModal(false)}
+                                disabled={loading}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button 
+                                variant="danger" 
+                                onClick={handleAnularFactura}
+                                disabled={loading || !motivo.trim()}
+                            >
+                                {loading ? 'Anulando...' : 'Anular Factura'}
+                            </Button>
+                        </div>
+                    </div>
+                </Modal>
             )}
-
-            <style>{`
-                .factura-card {
-                    margin-bottom: 1rem;
-                    transition: all 0.3s ease;
-                }
-
-                .factura-card:hover {
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                    transform: translateY(-2px);
-                }
-
-                .factura-card__header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: flex-start;
-                    margin-bottom: 1rem;
-                    padding-bottom: 0.75rem;
-                    border-bottom: 1px solid #e9ecef;
-                }
-
-                .factura-card__id {
-                    margin: 0 0 0.5rem 0;
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                    color: #2c3e50;
-                }
-
-                .factura-card__meta {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.25rem;
-                    font-size: 0.9rem;
-                    color: #6c757d;
-                }
-
-                .factura-card__estado {
-                    font-weight: 600;
-                    font-size: 0.85rem;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                }
-
-                .factura-card__total {
-                    text-align: right;
-                }
-
-                .factura-card__total-label {
-                    display: block;
-                    font-size: 0.85rem;
-                    color: #6c757d;
-                    margin-bottom: 0.25rem;
-                }
-
-                .factura-card__total-amount {
-                    font-size: 1.5rem;
-                    font-weight: 700;
-                    color: #27ae60;
-                }
-
-                .factura-card__cliente {
-                    margin-bottom: 1rem;
-                    padding: 0.75rem;
-                    background-color: #f8f9fa;
-                    border-radius: 8px;
-                    font-size: 0.9rem;
-                }
-
-                .factura-card__cliente-label {
-                    font-weight: 600;
-                    color: #495057;
-                    margin-right: 0.5rem;
-                }
-
-                .factura-card__cliente-name {
-                    font-weight: 500;
-                    color: #2c3e50;
-                    margin-right: 0.5rem;
-                }
-
-                .factura-card__cliente-email {
-                    color: #6c757d;
-                    font-style: italic;
-                }
-
-                .factura-card__productos {
-                    margin-bottom: 1rem;
-                }
-
-                .factura-card__productos-header {
-                    font-weight: 600;
-                    color: #495057;
-                    margin-bottom: 0.5rem;
-                    font-size: 0.9rem;
-                }
-
-                .factura-card__productos-list {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.5rem;
-                }
-
-                .factura-card__producto-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                    padding: 0.5rem;
-                    background-color: #f8f9fa;
-                    border-radius: 6px;
-                    font-size: 0.85rem;
-                }
-
-                .factura-card__producto-nombre {
-                    flex: 1;
-                    font-weight: 500;
-                    color: #2c3e50;
-                }
-
-                .factura-card__producto-cantidad {
-                    color: #6c757d;
-                    font-weight: 500;
-                    min-width: 30px;
-                }
-
-                .factura-card__producto-precio {
-                    color: #27ae60;
-                    font-weight: 600;
-                    min-width: 60px;
-                    text-align: right;
-                }
-
-                .factura-card__producto-item--more {
-                    padding: 0.5rem;
-                    text-align: center;
-                    color: #6c757d;
-                    font-style: italic;
-                    font-size: 0.85rem;
-                }
-
-                .factura-card__anulacion {
-                    margin-bottom: 1rem;
-                    padding: 0.75rem;
-                    background-color: #fff5f5;
-                    border: 1px solid #fed7d7;
-                    border-radius: 8px;
-                }
-
-                .factura-card__anulacion-header {
-                    font-weight: 600;
-                    color: #e53e3e;
-                    margin-bottom: 0.5rem;
-                    font-size: 0.9rem;
-                }
-
-                .factura-card__anulacion-info {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.25rem;
-                    font-size: 0.85rem;
-                    color: #744d47;
-                }
-
-                .factura-card__actions {
-                    display: flex;
-                    gap: 0.75rem;
-                    flex-wrap: wrap;
-                    padding-top: 0.75rem;
-                    border-top: 1px solid #e9ecef;
-                }
-
-                @media (max-width: 768px) {
-                    .factura-card__header {
-                        flex-direction: column;
-                        gap: 1rem;
-                    }
-
-                    .factura-card__total {
-                        text-align: left;
-                    }
-
-                    .factura-card__actions {
-                        flex-direction: column;
-                    }
-
-                    .factura-card__producto-item {
-                        flex-wrap: wrap;
-                        gap: 0.5rem;
-                    }
-
-                    .factura-card__cliente {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 0.25rem;
-                    }
-                }
-
-                .factura-card__detail-expansion {
-                    margin-top: 1rem;
-                    padding: 1.5rem;
-                    background: #f8f9fa;
-                    border: 1px solid #e9ecef;
-                    border-radius: 12px;
-                    animation: slideDown 0.3s ease-out;
-                    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-                }
-
-                @keyframes slideDown {
-                    from {
-                        opacity: 0;
-                        max-height: 0;
-                        padding: 0 1.5rem;
-                    }
-                    to {
-                        opacity: 1;
-                        max-height: 2000px;
-                        padding: 1.5rem;
-                    }
-                }
-
-                .factura-card__detail-expansion .factura-detail {
-                    margin: 0;
-                    font-size: 0.9rem;
-                }
-
-                .factura-card__detail-expansion .factura-detail__header {
-                    margin-bottom: 1.5rem;
-                }
-
-                .factura-card__detail-expansion .factura-detail__title {
-                    font-size: 1.25rem;
-                }
-
-                .factura-card__detail-expansion .factura-detail__total-amount {
-                    font-size: 1.5rem;
-                }
-            `}</style>
         </>
     );
 };
-
-export default FacturaCard;

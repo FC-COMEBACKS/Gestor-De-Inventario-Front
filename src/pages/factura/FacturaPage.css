@@ -1,0 +1,125 @@
+.factura-page {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding: 2rem 1rem;
+}
+
+.factura-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e1e5e9;
+}
+
+.header-content h1 {
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.header-content p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.admin-filters {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e1e5e9;
+    margin-bottom: 2rem;
+}
+
+.filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 400px;
+}
+
+.filter-section label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.factura-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e1e5e9;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .factura-page {
+        padding: 1rem 0.5rem;
+    }
+
+    .factura-page-header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .header-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .header-content p {
+        font-size: 1rem;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .admin-filters {
+        padding: 1rem;
+    }
+
+    .filter-section {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .factura-page {
+        padding: 0.5rem;
+    }
+
+    .factura-page-header {
+        padding: 0.75rem;
+        border-radius: 8px;
+    }
+
+    .header-content h1 {
+        font-size: 1.25rem;
+    }
+
+    .admin-filters {
+        padding: 0.75rem;
+        border-radius: 8px;
+    }
+
+    .factura-content {
+        border-radius: 8px;
+    }
+}

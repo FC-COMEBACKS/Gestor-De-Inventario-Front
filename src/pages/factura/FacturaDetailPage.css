@@ -1,0 +1,78 @@
+.factura-detail-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 2rem 1rem;
+}
+
+.page-background {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.factura-detail-page-error {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #f8f9fa;
+    color: #721c24;
+    padding: 2rem;
+}
+
+.factura-detail-page-error h2 {
+    margin: 0 0 1rem 0;
+    color: #721c24;
+    font-size: 2rem;
+}
+
+.factura-detail-page-error p {
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+.factura-detail-page-error button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.factura-detail-page-error button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .factura-detail-page {
+        padding: 1rem 0.5rem;
+    }
+
+    .factura-detail-page-error {
+        padding: 1rem;
+    }
+
+    .factura-detail-page-error h2 {
+        font-size: 1.5rem;
+    }
+
+    .factura-detail-page-error p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .factura-detail-page {
+        padding: 0.5rem;
+    }
+
+    .factura-detail-page-error button {
+        width: 100%;
+        max-width: 300px;
+    }
+}

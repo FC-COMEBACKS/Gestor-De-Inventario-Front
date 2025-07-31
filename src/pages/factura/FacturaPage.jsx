@@ -1,445 +1,127 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FacturaList } from '../../components/factura/FacturaList';
+import { useState, useEffect } from 'react';
+import { FacturaList } from '../../components/factura';
 import { Button } from '../../components/ui/Button';
-import { useFacturas } from '../../shared/hooks';
+import { Select } from '../../components/ui/Select';
+import { procesarCompra, listarUsuarios } from '../../services/api';
+import './FacturaPage.css';
 
 export const FacturaPage = () => {
-    const navigate = useNavigate();
-    const {
-        facturas,
-        loading,
-        error,
-        cargarFacturas,
-        anularFacturaExistente,
-        calcularEstadisticas
-    } = useFacturas();
-
-    const [_usuario, setUsuario] = useState(null);
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [userRole, setUserRole] = useState('');
+    const [users, setUsers] = useState([]);
+    const [selectedUserId, setSelectedUserId] = useState('');
+    const [processingCompra, setProcessingCompra] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
-        const userDetails = localStorage.getItem('user');
+        const userDetails = localStorage.getItem("user");
         if (userDetails) {
             try {
                 const parsedUser = JSON.parse(userDetails);
-                const userData = parsedUser?.userDetails || parsedUser;
-                setUsuario(userData);
-                setIsAdmin(userData?.role === 'ADMIN_ROLE');
+                const role = parsedUser?.userDetails?.role || parsedUser?.role;
+                setUserRole(role);
+
+                if (role === 'ADMIN_ROLE') {
+                    cargarUsuarios();
+                }
             } catch (err) {
-                console.error('Error al obtener información del usuario:', err);
+                console.warn("Error al leer datos del usuario:", err);
             }
         }
     }, []);
 
-    const handleAnularFactura = async (idFactura) => {
-        await anularFacturaExistente(idFactura);
+    const cargarUsuarios = async () => {
+        try {
+            const response = await listarUsuarios(100, 0); 
+            
+            if (!response.error && response.data?.users) {
+                setUsers(response.data.users);
+            }
+        } catch (error) {
+            console.error('Error al cargar usuarios:', error);
+        }
     };
 
-    const handleRefresh = () => {
-        cargarFacturas();
+    const handleProcesarCompra = async () => {
+        if (!window.confirm('¿Estás seguro de que deseas procesar la compra del carrito actual?')) {
+            return;
+        }
+
+        setProcessingCompra(true);
+        try {
+            const response = await procesarCompra();
+            
+            if (response.error) {
+                throw new Error(response.err?.response?.data?.message || 'Error al procesar compra');
+            }
+
+            alert(`¡Compra procesada exitosamente!\nFactura: #${response.data.factura.id.slice(-8).toUpperCase()}\nTotal: Q${response.data.factura.total.toFixed(2)}`);
+            
+            setRefreshKey(prev => prev + 1);
+            
+        } catch (error) {
+            console.error('Error al procesar compra:', error);
+            alert(error.message || 'Error al procesar la compra');
+        } finally {
+            setProcessingCompra(false);
+        }
     };
 
-    const estadisticas = calcularEstadisticas();
+    const handleUserChange = (e) => {
+        setSelectedUserId(e.target.value);
+    };
+
+    const getUserOptions = () => {
+        return [
+            { value: '', label: 'Todos los usuarios' },
+            ...users.map(user => ({
+                value: user._id,
+                label: `${user.name} ${user.surname} (${user.email})`
+            }))
+        ];
+    };
 
     return (
         <div className="factura-page">
-            <div className="factura-page__header">
-                <div className="factura-page__header-content">
-                    <div className="factura-page__title-section">
-                        <h1 className="factura-page__title">
-                            📋 Gestión de Facturas
-                        </h1>
-                        <p className="factura-page__subtitle">
-                            {isAdmin 
-                                ? 'Administra todas las facturas del sistema'
-                                : 'Consulta tu historial de compras'
-                            }
-                        </p>
-                    </div>
-                    <div className="factura-page__actions">
-                        <Button
-                            variant="outline"
-                            onClick={handleRefresh}
-                            disabled={loading}
+            <div className="factura-page-header">
+                <div className="header-content">
+                    <h1>📄 Gestión de Facturas</h1>
+                    <p>Administra y revisa todas las facturas del sistema</p>
+                </div>
+
+                <div className="header-actions">
+                    {userRole === 'USER_ROLE' && (
+                        <Button 
+                            variant="primary"
+                            onClick={handleProcesarCompra}
+                            disabled={processingCompra}
                         >
-                            🔄 Actualizar
+                            {processingCompra ? '⏳ Procesando...' : '🛒 Procesar Compra'}
                         </Button>
-                        {!isAdmin && (
-                            <Button
-                                variant="primary"
-                                onClick={() => navigate('/carrito')}
-                            >
-                                🛒 Ir al Carrito
-                            </Button>
-                        )}
-                    </div>
+                    )}
                 </div>
             </div>
 
-            {}
-            {facturas.length > 0 && (
-                <div className="factura-page__stats">
-                    <div className="factura-page__stats-grid">
-                        <div className="factura-page__stat-card">
-                            <div className="factura-page__stat-icon">📋</div>
-                            <div className="factura-page__stat-content">
-                                <span className="factura-page__stat-value">
-                                    {estadisticas.total}
-                                </span>
-                                <span className="factura-page__stat-label">
-                                    Total Facturas
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="factura-page__stat-card">
-                            <div className="factura-page__stat-icon">✅</div>
-                            <div className="factura-page__stat-content">
-                                <span className="factura-page__stat-value">
-                                    {estadisticas.activas}
-                                </span>
-                                <span className="factura-page__stat-label">
-                                    Activas
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="factura-page__stat-card">
-                            <div className="factura-page__stat-icon">❌</div>
-                            <div className="factura-page__stat-content">
-                                <span className="factura-page__stat-value">
-                                    {estadisticas.anuladas}
-                                </span>
-                                <span className="factura-page__stat-label">
-                                    Anuladas
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="factura-page__stat-card factura-page__stat-card--highlight">
-                            <div className="factura-page__stat-icon">💰</div>
-                            <div className="factura-page__stat-content">
-                                <span className="factura-page__stat-value">
-                                    Q{estadisticas.montoTotal.toFixed(2)}
-                                </span>
-                                <span className="factura-page__stat-label">
-                                    Monto Total
-                                </span>
-                            </div>
-                        </div>
+            {userRole === 'ADMIN_ROLE' && users.length > 0 && (
+                <div className="admin-filters">
+                    <div className="filter-section">
+                        <label htmlFor="user-select">Filtrar por usuario:</label>
+                        <Select
+                            id="user-select"
+                            value={selectedUserId}
+                            onChange={handleUserChange}
+                            options={getUserOptions()}
+                        />
                     </div>
                 </div>
             )}
 
-            {}
-            {error && (
-                <div className="factura-page__error">
-                    <div className="factura-page__error-content">
-                        <span className="factura-page__error-icon">⚠️</span>
-                        <span className="factura-page__error-message">{error}</span>
-                        <button 
-                            className="factura-page__error-retry"
-                            onClick={handleRefresh}
-                        >
-                            Reintentar
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {}
-            <div className="factura-page__content">
-                <FacturaList
-                    facturas={facturas}
-                    loading={loading}
-                    onAnular={handleAnularFactura}
-                    isAdmin={isAdmin}
-                    showFilters={true}
+            <div className="factura-content">
+                <FacturaList 
+                    key={refreshKey}
+                    userRole={userRole}
+                    selectedUserId={selectedUserId || null}
                 />
             </div>
-
-            {}
-            {!isAdmin && facturas.length === 0 && !loading && (
-                <div className="factura-page__info">
-                    <div className="factura-page__info-content">
-                        <h3>🛒 ¿Cómo generar una factura?</h3>
-                        <div className="factura-page__info-steps">
-                            <div className="factura-page__info-step">
-                                <span className="factura-page__info-step-number">1</span>
-                                <span>Agrega productos a tu carrito de compras</span>
-                            </div>
-                            <div className="factura-page__info-step">
-                                <span className="factura-page__info-step-number">2</span>
-                                <span>Revisa tu carrito y confirma los productos</span>
-                            </div>
-                            <div className="factura-page__info-step">
-                                <span className="factura-page__info-step-number">3</span>
-                                <span>Procesa la compra para generar la factura</span>
-                            </div>
-                            <div className="factura-page__info-step">
-                                <span className="factura-page__info-step-number">4</span>
-                                <span>Tu factura aparecerá aquí automáticamente</span>
-                            </div>
-                        </div>
-                        <Button
-                            variant="primary"
-                            size="large"
-                            onClick={() => navigate('/catalogo')}
-                            className="factura-page__info-button"
-                        >
-                            🛍️ Explorar Productos
-                        </Button>
-                    </div>
-                </div>
-            )}
-
-            <style>{`
-                .factura-page {
-                    min-height: 100vh;
-                    background-color: #f8f9fa;
-                }
-
-                .factura-page__header {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    padding: 2rem 0;
-                    margin-bottom: 2rem;
-                }
-
-                .factura-page__header-content {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    padding: 0 1rem;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-
-                .factura-page__title {
-                    margin: 0 0 0.5rem 0;
-                    font-size: 2.5rem;
-                    font-weight: 700;
-                }
-
-                .factura-page__subtitle {
-                    margin: 0;
-                    font-size: 1.1rem;
-                    opacity: 0.9;
-                }
-
-                .factura-page__actions {
-                    display: flex;
-                    gap: 1rem;
-                    align-items: center;
-                }
-
-                .factura-page__stats {
-                    max-width: 1200px;
-                    margin: 0 auto 2rem auto;
-                    padding: 0 1rem;
-                }
-
-                .factura-page__stats-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                    gap: 1rem;
-                }
-
-                .factura-page__stat-card {
-                    background: white;
-                    padding: 1.5rem;
-                    border-radius: 12px;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                    transition: transform 0.2s ease;
-                }
-
-                .factura-page__stat-card:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                }
-
-                .factura-page__stat-card--highlight {
-                    background: linear-gradient(135deg, #27ae60, #2ecc71);
-                    color: white;
-                }
-
-                .factura-page__stat-icon {
-                    font-size: 2rem;
-                }
-
-                .factura-page__stat-content {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .factura-page__stat-value {
-                    font-size: 1.5rem;
-                    font-weight: 700;
-                    margin-bottom: 0.25rem;
-                }
-
-                .factura-page__stat-label {
-                    font-size: 0.9rem;
-                    opacity: 0.8;
-                }
-
-                .factura-page__error {
-                    max-width: 1200px;
-                    margin: 0 auto 2rem auto;
-                    padding: 0 1rem;
-                }
-
-                .factura-page__error-content {
-                    background-color: #fff5f5;
-                    border: 1px solid #fed7d7;
-                    border-radius: 12px;
-                    padding: 1rem;
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .factura-page__error-icon {
-                    font-size: 1.5rem;
-                    color: #e53e3e;
-                }
-
-                .factura-page__error-message {
-                    flex: 1;
-                    color: #744d47;
-                    font-weight: 500;
-                }
-
-                .factura-page__error-retry {
-                    background-color: #e53e3e;
-                    color: white;
-                    border: none;
-                    padding: 0.5rem 1rem;
-                    border-radius: 6px;
-                    font-weight: 500;
-                    cursor: pointer;
-                    transition: background-color 0.2s;
-                }
-
-                .factura-page__error-retry:hover {
-                    background-color: #c53030;
-                }
-
-                .factura-page__content {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    padding: 0 1rem;
-                }
-
-                .factura-page__info {
-                    max-width: 800px;
-                    margin: 2rem auto;
-                    padding: 0 1rem;
-                }
-
-                .factura-page__info-content {
-                    background: white;
-                    padding: 2rem;
-                    border-radius: 12px;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                    text-align: center;
-                }
-
-                .factura-page__info h3 {
-                    color: #2c3e50;
-                    margin-bottom: 1.5rem;
-                    font-size: 1.3rem;
-                }
-
-                .factura-page__info-steps {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1rem;
-                    margin-bottom: 2rem;
-                    text-align: left;
-                }
-
-                .factura-page__info-step {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                    padding: 1rem;
-                    background-color: #f8f9fa;
-                    border-radius: 8px;
-                }
-
-                .factura-page__info-step-number {
-                    background-color: #667eea;
-                    color: white;
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: 600;
-                    font-size: 0.9rem;
-                    flex-shrink: 0;
-                }
-
-                .factura-page__info-button {
-                    margin-top: 1rem;
-                }
-
-                @media (max-width: 768px) {
-                    .factura-page__header-content {
-                        flex-direction: column;
-                        gap: 1.5rem;
-                        text-align: center;
-                    }
-
-                    .factura-page__title {
-                        font-size: 2rem;
-                    }
-
-                    .factura-page__actions {
-                        justify-content: center;
-                    }
-
-                    .factura-page__stats-grid {
-                        grid-template-columns: repeat(2, 1fr);
-                    }
-
-                    .factura-page__stat-card {
-                        padding: 1rem;
-                    }
-
-                    .factura-page__stat-value {
-                        font-size: 1.25rem;
-                    }
-                }
-
-                @media (max-width: 480px) {
-                    .factura-page__stats-grid {
-                        grid-template-columns: 1fr;
-                    }
-
-                    .factura-page__info-content {
-                        padding: 1.5rem;
-                    }
-
-                    .factura-page__info-steps {
-                        text-align: center;
-                    }
-
-                    .factura-page__info-step {
-                        flex-direction: column;
-                        text-align: center;
-                        gap: 0.75rem;
-                    }
-                }
-            `}</style>
         </div>
     );
 };
-
-export default FacturaPage;
