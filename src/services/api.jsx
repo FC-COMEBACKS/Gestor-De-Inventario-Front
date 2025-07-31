@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://127.0.0.1:3002/gestorInventario/v1",
+    baseURL: "https://gestor-de-inventario-backend.vercel.app/gestorInventario/v1",
     timeout: 3000,
     httpsAgent: false
 });
