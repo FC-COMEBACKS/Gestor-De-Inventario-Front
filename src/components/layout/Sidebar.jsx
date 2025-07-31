@@ -61,12 +61,13 @@ const Sidebar = ({ isOpen, onToggle }) => {
     const handleNavigation = (path) => {
         navigate(path);
         if (onToggle) {
-            onToggle(); 
+            onToggle(); // Cerrar sidebar en móviles
         }
     };
 
     return (
         <>
+            {}
             {isOpen && (
                 <div 
                     className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-lg-none"
@@ -75,6 +76,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 />
             )}
 
+            {}
             <div 
                 className={`bg-dark text-white vh-100 position-fixed top-0 start-0 d-flex flex-column ${
                     isOpen ? 'translate-x-0' : '-translate-x-100'
@@ -85,6 +87,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     transition: 'transform 0.3s ease-in-out'
                 }}
             >
+                {}
                 <div className="p-3 border-bottom border-secondary">
                     <div className="d-flex align-items-center justify-content-between">
                         <h5 className="mb-0">
@@ -99,6 +102,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     </div>
                 </div>
 
+                {}
                 <nav className="flex-grow-1 p-3">
                     <ul className="list-unstyled">
                         {filteredMenuItems.map((item, index) => {
@@ -128,6 +132,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     </ul>
                 </nav>
 
+                {}
                 <div className="p-3 border-top border-secondary">
                     <div className="d-flex align-items-center">
                         <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3"

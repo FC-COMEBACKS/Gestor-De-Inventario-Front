@@ -35,7 +35,7 @@ export const useUsers = () => {
             if (response.error) {
                 throw new Error(response.err?.response?.data?.message || 'Error al cargar usuarios');
             }
-    
+            
             const responseData = response.data?.data || response.data;
             console.log('obtenerUsuarios - Data extraída:', responseData);
             

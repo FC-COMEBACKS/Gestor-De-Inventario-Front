@@ -58,6 +58,7 @@ const ProductoCatalogCard = ({ producto }) => {
 
     return (
         <div className="card h-100 shadow-sm producto-catalog-card">
+            {}
             <div className="card-img-top d-flex align-items-center justify-content-center bg-light" 
                  style={{ height: '200px' }}>
                 <ProductIcon 
@@ -68,14 +69,17 @@ const ProductoCatalogCard = ({ producto }) => {
             </div>
             
             <div className="card-body d-flex flex-column">
+                {}
                 <h5 className="card-title text-truncate" title={producto.nombreProducto}>
                     {producto.nombreProducto}
                 </h5>
                 
+                {}
                 <p className="text-muted small mb-2">
                     🏷️ {producto.categoria?.nombre || 'Sin categoría'}
                 </p>
                 
+                {}
                 <p className="card-text text-muted small" 
                    style={{ 
                        overflow: 'hidden', 
@@ -86,10 +90,12 @@ const ProductoCatalogCard = ({ producto }) => {
                     {producto.descripcionProducto || 'Sin descripción disponible'}
                 </p>
                 
+                {}
                 <div className="mb-2">
                     {getStockBadge(producto.stock)}
                 </div>
                 
+                {}
                 <div className="mt-auto">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h4 className="text-success mb-0">
@@ -100,7 +106,7 @@ const ProductoCatalogCard = ({ producto }) => {
                         </small>
                     </div>
                     
-
+                    {}
                     <div className="d-grid gap-2">
                         <Button
                             variant={agregadoExitosamente ? "success" : "primary"}

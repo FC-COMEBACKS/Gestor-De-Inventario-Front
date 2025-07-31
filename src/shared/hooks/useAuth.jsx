@@ -41,6 +41,7 @@ export const useAuth = () => {
                 return { success: false, error: errorMessage };
             }
             
+
             const userData = response.data?.data || response.data;
             
             let completeUserData = userData;
@@ -56,11 +57,13 @@ export const useAuth = () => {
                     const userResponse = await obtenerUsuarioPorId(userData.userDetails.uid);
                     
                     if (userResponse && userResponse.data && userResponse.data.success) {
+                     
                         completeUserData = {
                             ...userData,
                             userDetails: {
                                 ...userData.userDetails,
                                 ...userResponse.data.user,
+                            
                                 token: userData.userDetails.token
                             }
                         };
@@ -135,17 +138,21 @@ export const useAuth = () => {
 
     const getUserRole = useCallback(() => {
         if (!user) return null;
+        
         const userRole = user?.userDetails?.role;
+        
         return userRole;
     }, [user]);
 
     const getRedirectPath = useCallback((userData) => {
         const userRole = userData?.userDetails?.role;
+        
         if (userRole === "ADMIN_ROLE") {
             return "/dashboard-admin";
         } else if (userRole === "CLIENT_ROLE") {
             return "/dashboard-user";
         } else {
+        
             return "/dashboard-user";
         }
     }, []);

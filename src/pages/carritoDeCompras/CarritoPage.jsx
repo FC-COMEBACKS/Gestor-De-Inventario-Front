@@ -40,7 +40,6 @@ const CarritoPage = () => {
         } else {
             console.error('❌ CarritoPage - Error al eliminar producto');
             console.error('❌ Error actual:', error);
-            
             if (error && error.includes('no encontrado')) {
                 console.log('🔄 CarritoPage - Producto no encontrado, sincronizando carrito...');
                 await obtenerCarrito();
@@ -57,7 +56,6 @@ const CarritoPage = () => {
             
             if (resultado.success) {
                 await obtenerCarrito();
-                
                 setTimeout(() => {
                     navigate('/facturas');
                 }, 2000);

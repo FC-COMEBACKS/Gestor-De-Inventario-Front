@@ -18,6 +18,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
             ...prev,
             [name]: value
         }));
+        
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,

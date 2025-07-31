@@ -24,7 +24,7 @@ const ProductosPage = () => {
 
     const [modalState, setModalState] = useState({
         isOpen: false,
-        mode: 'create',
+        mode: 'create', 
         producto: null
     });
 
@@ -206,6 +206,7 @@ const ProductosPage = () => {
 
     return (
         <div className="container-fluid py-4">
+            {}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h1 className="h2 mb-1">Productos</h1>
@@ -218,6 +219,7 @@ const ProductosPage = () => {
                 )}
             </div>
 
+            {}
             <div className="row mb-4">
                 <div className="col-md-3 mb-3">
                     <div className="card">
@@ -273,6 +275,7 @@ const ProductosPage = () => {
                 </div>
             </div>
 
+            {}
             <div className="card mb-4">
                 <div className="card-body">
                     <div className="row g-3">
@@ -314,6 +317,7 @@ const ProductosPage = () => {
                 </div>
             </div>
 
+            {}
             {error && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                     <div className="flex">
@@ -330,6 +334,7 @@ const ProductosPage = () => {
                 </div>
             )}
 
+            {}
             <ProductoList
                 productos={productosFiltrados}
                 loading={loading}
@@ -339,6 +344,7 @@ const ProductosPage = () => {
                 onSearch={(term) => setFiltros(prev => ({ ...prev, busqueda: term }))}
             />
 
+            {}
             <ProductoModal
                 isOpen={modalState.isOpen}
                 onClose={handleCloseModal}

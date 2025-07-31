@@ -42,6 +42,7 @@ const ProductoModal = ({
                 size="lg"
             >
                 <div className="space-y-6">
+                    {}
                     <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                         <div>
                             <h3 className="text-xl font-semibold text-gray-900">
@@ -56,6 +57,7 @@ const ProductoModal = ({
                         </span>
                     </div>
 
+                    {}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-4">
                             <div>
@@ -127,6 +129,7 @@ const ProductoModal = ({
                         </div>
                     </div>
 
+                    {}
                     <div className="border-t pt-4">
                         <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
                             <div>

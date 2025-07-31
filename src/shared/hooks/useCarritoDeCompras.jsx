@@ -155,13 +155,11 @@ const useCarritoDeCompras = () => {
         loading,
         error,
         cantidadTotal,
-        
         obtenerCarrito,
         agregarProducto,
         eliminarProducto,
         getCantidadProductos,
         clearError,
-    
         isEmpty: carrito.length === 0,
         cantidadProductos: getCantidadProductos()
     };

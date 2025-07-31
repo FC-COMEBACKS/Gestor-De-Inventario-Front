@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../../components/layout/MainLayout";
@@ -18,14 +19,17 @@ const DashboardAdminPage = () => {
             try {
                 setStats(prev => ({ ...prev, loading: true }));
 
+
                 const productosResponse = await listarProductos();
                 const totalProductos = productosResponse.error ? 0 : 
                     (productosResponse.data?.productos?.length || productosResponse.data?.length || 0);
+
 
                 const categoriasResponse = await listarCategorias(100, 0); 
                 const totalCategorias = categoriasResponse.error ? 0 : 
                     (categoriasResponse.data?.total || categoriasResponse.data?.categorias?.length || 0);
 
+    
                 const usuariosResponse = await listarUsuarios(100, 0); 
                 const totalUsuarios = usuariosResponse.error ? 0 : 
                     (usuariosResponse.data?.total || usuariosResponse.data?.usuarios?.length || 0);

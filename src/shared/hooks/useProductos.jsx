@@ -210,7 +210,6 @@ export const useProductos = () => {
         producto,
         loading,
         error,
-        
         obtenerProductos,
         obtenerProducto,
         agregarProducto,
@@ -220,7 +219,6 @@ export const useProductos = () => {
         obtenerMasVendidos,
         buscarPorNombre,
         obtenerPorCategoria,
-        
         setError: (err) => setError(err),
         clearError: () => setError(null),
         clearProducto: () => setProducto(null)

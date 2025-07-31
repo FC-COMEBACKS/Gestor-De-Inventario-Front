@@ -18,7 +18,7 @@ const CarritoSummary = ({
     };
 
     const subtotal = calcularSubtotal();
-    const impuestos = subtotal * 0.12;
+    const impuestos = subtotal * 0.12; 
     const total = subtotal + impuestos;
     const cantidadProductos = items.reduce((sum, item) => sum + item.cantidad, 0);
 

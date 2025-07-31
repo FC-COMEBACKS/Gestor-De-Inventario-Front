@@ -146,6 +146,7 @@ const ProductoList = ({
 
     return (
         <div className="space-y-4">
+            {}
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold text-gray-900">
                     Lista de Productos
@@ -160,6 +161,7 @@ const ProductoList = ({
                 </div>
             </div>
 
+            {}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div className="bg-white p-4 rounded-lg shadow border">
                     <div className="text-sm text-gray-600">Total Productos</div>
@@ -187,6 +189,7 @@ const ProductoList = ({
                 </div>
             </div>
 
+            {}
             <div className="bg-white rounded-lg shadow">
                 <Table
                     columns={columns}

@@ -11,7 +11,7 @@ const LogoutButton = ({ className = '' }) => {
     try {
       setIsLoggingOut(true);
       logout();
-      window.location.href = '/auth'; 
+      window.location.href = '/auth';
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     } finally {

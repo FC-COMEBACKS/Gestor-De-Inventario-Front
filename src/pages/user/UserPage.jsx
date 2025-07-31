@@ -21,7 +21,7 @@ const UserPage = () => {
 
     const [showModal, setShowModal] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
-    const [modalType, setModalType] = useState('edit'); 
+    const [modalType, setModalType] = useState('edit');
     const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {

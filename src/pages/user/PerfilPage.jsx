@@ -20,6 +20,7 @@ const PerfilPage = () => {
                 const userDetails = user?.userDetails;
                 const userUid = userDetails?.uid;
                 
+                // Verificar si ya tenemos todos los datos necesarios
                 const hasCompleteData = userDetails && 
                     userDetails.name && 
                     userDetails.email && 
@@ -50,6 +51,7 @@ const PerfilPage = () => {
             }
         };
 
+        // Solo cargar una vez cuando tengamos usuario
         if (user && !currentUser) {
             loadUserProfile();
         }

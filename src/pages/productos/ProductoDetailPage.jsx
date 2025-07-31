@@ -100,6 +100,7 @@ const ProductoDetailPage = () => {
 
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-6">
+            {}
             <div className="flex justify-between items-start">
                 <div>
                     <Button 
@@ -133,6 +134,7 @@ const ProductoDetailPage = () => {
                 </div>
             </div>
 
+            {}
             {showDeleteConfirm && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                     <div className="flex justify-between items-center">
@@ -159,7 +161,9 @@ const ProductoDetailPage = () => {
                 </div>
             )}
 
+            {}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {}
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-white rounded-lg shadow p-6">
                         <h2 className="text-xl font-semibold mb-4">Descripción</h2>
@@ -184,6 +188,7 @@ const ProductoDetailPage = () => {
                         </div>
                     </div>
 
+                    {}
                     <div className="bg-white rounded-lg shadow p-6">
                         <h2 className="text-xl font-semibold mb-4">Historial</h2>
                         <div className="space-y-2 text-sm text-gray-600">
@@ -209,7 +214,9 @@ const ProductoDetailPage = () => {
                     </div>
                 </div>
 
+                {}
                 <div className="space-y-6">
+                    {}
                     <div className="bg-white rounded-lg shadow p-6">
                         <h2 className="text-xl font-semibold mb-4">Información Comercial</h2>
                         <div className="space-y-4">
@@ -240,6 +247,7 @@ const ProductoDetailPage = () => {
                         </div>
                     </div>
 
+                    {}
                     <div className="bg-white rounded-lg shadow p-6">
                         <h2 className="text-xl font-semibold mb-4">Estadísticas</h2>
                         <div className="space-y-4">
@@ -262,6 +270,7 @@ const ProductoDetailPage = () => {
                         </div>
                     </div>
 
+                    {}
                     {!isAdmin && producto.stock > 0 && (
                         <div className="bg-white rounded-lg shadow p-6">
                             <h2 className="text-xl font-semibold mb-4">Acciones</h2>

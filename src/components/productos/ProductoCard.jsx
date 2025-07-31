@@ -31,6 +31,7 @@ const ProductoCard = ({
     return (
         <Card className="h-full flex flex-col">
             <div className="flex-1">
+                {}
                 <div className="flex justify-between items-start mb-3">
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
                         {producto.categoria?.nombre || 'Sin categoría'}
@@ -40,14 +41,17 @@ const ProductoCard = ({
                     </span>
                 </div>
 
+                {}
                 <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
                     {producto.nombreProducto}
                 </h3>
 
+                {}
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                     {producto.descripcionProducto}
                 </p>
 
+                {}
                 <div className="space-y-2 mb-4">
                     <div className="flex justify-between">
                         <span className="text-sm text-gray-500">Precio:</span>
@@ -80,8 +84,10 @@ const ProductoCard = ({
                 </div>
             </div>
 
+            {}
             <div className="pt-4 border-t border-gray-200">
                 <div className="flex flex-col space-y-2">
+                    {}
                     <div className="flex space-x-2">
                         <Button
                             variant="outline"
@@ -103,6 +109,7 @@ const ProductoCard = ({
                         )}
                     </div>
 
+                    {}
                     {isAdmin && (
                         <div className="flex space-x-2">
                             <EditButton
@@ -124,6 +131,7 @@ const ProductoCard = ({
                 </div>
             </div>
 
+            {}
             <div className="text-xs text-gray-400 mt-2 text-center">
                 {producto.updatedAt && (
                     `Actualizado: ${new Date(producto.updatedAt).toLocaleDateString()}`

@@ -117,6 +117,7 @@ const CatalogoPage = () => {
 
     return (
         <div className="container-fluid p-4">
+            {}
             <div className="row mb-4">
                 <div className="col-12">
                     <h1 className="display-6 mb-2">🛒 Catálogo de Productos</h1>
@@ -124,6 +125,7 @@ const CatalogoPage = () => {
                 </div>
             </div>
 
+            {}
             <div className="row mb-4">
                 <div className="col-md-3 mb-3">
                     <div className="card bg-primary text-white">
@@ -168,6 +170,7 @@ const CatalogoPage = () => {
                 </div>
             </div>
 
+            {}
             <div className="card mb-4">
                 <div className="card-header">
                     <h5 className="mb-0">🔍 Buscar y Filtrar</h5>
@@ -211,6 +214,7 @@ const CatalogoPage = () => {
                 </div>
             </div>
 
+            {}
             {error && (
                 <div className="alert alert-danger alert-dismissible" role="alert">
                     <strong>Error:</strong> {error}
@@ -222,6 +226,7 @@ const CatalogoPage = () => {
                 </div>
             )}
 
+            {}
             {loading && (
                 <div className="text-center py-4">
                     <div className="spinner-border text-primary" role="status">
@@ -231,6 +236,7 @@ const CatalogoPage = () => {
                 </div>
             )}
 
+            {}
             {!loading && (
                 <div className="row">
                     {productosFiltrados.length > 0 ? (

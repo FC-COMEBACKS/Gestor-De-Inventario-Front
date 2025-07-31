@@ -47,6 +47,7 @@ api.interceptors.response.use(
     }
 );
 
+// AUTH
 export const login = async (data) => {
     try {
         return await api.post("/auth/login", data);
@@ -69,6 +70,54 @@ export const register = async (data) => {
     }
 };
 
+// CATEGORIA
+export const listarCategorias = async (limite = 10, desde = 0) => {
+    try {
+        const response = await api.get(`/categoria/listarCategorias?limite=${limite}&desde=${desde}`);
+        return response;
+    } catch (err) {
+        console.error("❌ Error en listarCategorias:", err);
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const crearCategoria = async (data) => {
+    try {
+        return await api.post("/categoria/crearCategoria", data);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const editarCategoria = async (uid, data) => {
+    try {
+        return await api.put(`/categoria/editarCategoria/${uid}`, data);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const eliminarCategoria = async (uid) => {
+    try {
+        return await api.delete(`/categoria/eliminarCategoria/${uid}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+// USUARIOS
 export const listarUsuarios = async (limite = 10, desde = 0) => {
     try {
         return await api.get(`/user?limite=${limite}&desde=${desde}`)
@@ -146,129 +195,7 @@ export const eliminarCuenta = async (uid, data) => {
     }
 }
 
-export const agregarProductoAlCarrito = async (data) => {
-    try {
-        const response = await api.post("/carritoDeCompras/agregarProducto", data);
-        return response;
-    } catch (err) {
-        return {
-            error: true,
-            err
-        }
-    }
-}
-
-export const listarProductosCarrito = async () => {
-    try {
-        const response = await api.get("/carritoDeCompras/listarCarrito");
-        return response;
-    } catch (err) {
-        return {
-            error: true,
-            err
-        }
-    }
-}
-
-export const eliminarProductoDelCarrito = async (idProducto) => {
-    console.log('🗑️ API - Eliminar producto del carrito');
-    console.log('🎯 ID recibido (idProducto):', idProducto);
-    
-    if (!idProducto || idProducto === '' || idProducto === null || idProducto === undefined) {
-        console.error('❌ ID inválido');
-        return {
-            error: true,
-            err: new Error('ID de producto inválido')
-        };
-    }
-    
-    const userDetails = localStorage.getItem("user");
-    if (userDetails) {
-        try {
-            const parsedUser = JSON.parse(userDetails);
-            const userId = parsedUser?.userDetails?.uid || parsedUser?.uid;
-            console.log('👤 Usuario:', parsedUser?.userDetails?.nombre || 'Sin nombre');
-            console.log('🆔 User ID:', userId);
-        } catch (err) {
-            console.warn('⚠️ Error al parsear usuario:', err);
-        }
-    }
-    
-    try {
-        console.log('📡 Enviando DELETE request...');
-        console.log('📦 ID del producto a eliminar:', idProducto);
-        console.log('🔗 URL:', '/carritoDeCompras/eliminarProducto');
-        
-        const response = await api.delete("/carritoDeCompras/eliminarProducto", {
-            data: { idProducto }
-        });
-        
-        console.log('✅ ÉXITO - Status:', response.status);
-        console.log('✅ ÉXITO - Mensaje:', response.data?.message);
-        
-        return response;
-        
-    } catch (err) {
-        console.error('❌ ERROR - Status:', err.response?.status);
-        console.error('❌ ERROR - Mensaje:', err.response?.data?.message || err.message);
-        console.error('❌ ERROR - URL:', err.config?.url);
-        console.error('❌ ERROR - Method:', err.config?.method);
-        console.error('❌ ERROR - Data enviada:', err.config?.data);
-        console.error('❌ ERROR - Response completa:', err.response?.data);
-        
-        return {
-            error: true,
-            err
-        };
-    }
-}
-
-export const listarCategorias = async (limite = 10, desde = 0) => {
-    try {
-        const response = await api.get(`/categoria/listarCategorias?limite=${limite}&desde=${desde}`);
-        return response;
-    } catch (err) {
-        console.error("❌ Error en listarCategorias:", err);
-        return {
-            error: true,
-            err
-        }
-    }
-}
-
-export const crearCategoria = async (data) => {
-    try {
-        return await api.post("/categoria/crearCategoria", data);
-    } catch (err) {
-        return {
-            error: true,
-            err
-        }
-    }
-}
-
-export const editarCategoria = async (uid, data) => {
-    try {
-        return await api.put(`/categoria/editarCategoria/${uid}`, data);
-    } catch (err) {
-        return {
-            error: true,
-            err
-        }
-    }
-}
-
-export const eliminarCategoria = async (uid) => {
-    try {
-        return await api.delete(`/categoria/eliminarCategoria/${uid}`);
-    } catch (err) {
-        return {
-            error: true,
-            err
-        }
-    }
-}
-
+// PRODUCTOS
 export const listarProductos = async () => {
     try {
         const response = await api.get("/producto/ListarProductos");
@@ -370,6 +297,191 @@ export const buscarProductosPorNombre = async (nombreProducto) => {
 export const obtenerProductosPorCategoria = async (categoriaId) => {
     try {
         const response = await api.get(`/producto/productosPorCategoria/${categoriaId}`);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+// CARRITO DE COMPRAS
+export const agregarProductoAlCarrito = async (data) => {
+    try {
+        const response = await api.post("/carritoDeCompras/agregarProducto", data);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const listarProductosCarrito = async () => {
+    try {
+        const response = await api.get("/carritoDeCompras/listarCarrito");
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const eliminarProductoDelCarrito = async (idProducto) => {
+    console.log('🗑️ API - Eliminar producto del carrito');
+    console.log('🎯 ID recibido (idProducto):', idProducto);
+    
+    if (!idProducto || idProducto === '' || idProducto === null || idProducto === undefined) {
+        console.error('❌ ID inválido');
+        return {
+            error: true,
+            err: new Error('ID de producto inválido')
+        };
+    }
+    
+    const userDetails = localStorage.getItem("user");
+    if (userDetails) {
+        try {
+            const parsedUser = JSON.parse(userDetails);
+            const userId = parsedUser?.userDetails?.uid || parsedUser?.uid;
+            console.log('👤 Usuario:', parsedUser?.userDetails?.nombre || 'Sin nombre');
+            console.log('🆔 User ID:', userId);
+        } catch (err) {
+            console.warn('⚠️ Error al parsear usuario:', err);
+        }
+    }
+    
+    try {
+        console.log('📡 Enviando DELETE request...');
+        console.log('📦 ID del producto a eliminar:', idProducto);
+        console.log('🔗 URL:', '/carritoDeCompras/eliminarProducto');
+        
+        const response = await api.delete("/carritoDeCompras/eliminarProducto", {
+            data: { idProducto }
+        });
+        
+        console.log('✅ ÉXITO - Status:', response.status);
+        console.log('✅ ÉXITO - Mensaje:', response.data?.message);
+        
+        return response;
+        
+    } catch (err) {
+        console.error('❌ ERROR - Status:', err.response?.status);
+        console.error('❌ ERROR - Mensaje:', err.response?.data?.message || err.message);
+        console.error('❌ ERROR - URL:', err.config?.url);
+        console.error('❌ ERROR - Method:', err.config?.method);
+        console.error('❌ ERROR - Data enviada:', err.config?.data);
+        console.error('❌ ERROR - Response completa:', err.response?.data);
+        
+        return {
+            error: true,
+            err
+        };
+    }
+}
+
+// FACTURAS
+export const procesarCompra = async () => {
+    try {
+        const response = await api.post("/factura/procesarCompra");
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const descargarFacturaPDF = async (idFactura) => {
+    try {
+        console.log('📄 Descargando PDF de factura:', idFactura);
+        
+        const response = await api.get(`/factura/descargarPDF/${idFactura}`, {
+            responseType: 'blob'
+        });
+        
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        
+        const url = window.URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Factura_${idFactura.slice(-8).toUpperCase()}.pdf`;
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        window.URL.revokeObjectURL(url);
+        
+        console.log('✅ PDF descargado exitosamente');
+        return { success: true };
+        
+    } catch (err) {
+        console.error('❌ Error descargando PDF:', err);
+
+        let errorMessage = 'Error al descargar el PDF. Inténtalo de nuevo.';
+        
+        if (err.response?.status === 404) {
+            errorMessage = 'Factura no encontrada.';
+        } else if (err.response?.status === 403) {
+            errorMessage = 'No tienes permisos para descargar esta factura.';
+        } else if (err.response?.status === 500) {
+            errorMessage = 'Error interno del servidor al generar el PDF.';
+        }
+            
+        alert(errorMessage);
+        
+        return {
+            error: true,
+            err,
+            message: errorMessage
+        };
+    }
+}
+
+export const editarFactura = async (idFactura, data) => {
+    try {
+        const response = await api.put(`/factura/editarFactura/${idFactura}`, data);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const anularFactura = async (idFactura, motivo) => {
+    try {
+        const response = await api.patch(`/factura/anularFactura/${idFactura}`, { motivo });
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const obtenerFacturasPorUsuario = async (estado = null, idUsuario = null) => {
+    try {
+        let url = "/factura/obtenerFacturasPorUsuario";
+        const params = new URLSearchParams();
+        
+        if (estado) params.append('estado', estado);
+        if (idUsuario) params.append('idUsuario', idUsuario);
+        
+        if (params.toString()) {
+            url += `?${params.toString()}`;
+        }
+        
+        const response = await api.get(url);
         return response;
     } catch (err) {
         return {

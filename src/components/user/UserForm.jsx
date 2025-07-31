@@ -12,6 +12,7 @@ const UserForm = ({ user, onSave, onCancel, mode = 'edit' }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
         const dataToSend = mode === 'edit' ? {
             name: formData.name,
             surname: formData.surname,
@@ -71,7 +72,7 @@ const UserForm = ({ user, onSave, onCancel, mode = 'edit' }) => {
                     value={formData.username}
                     onChange={handleChange}
                     required
-                    disabled={mode === 'edit'} 
+                    disabled={mode === 'edit'} // No editable en modo edición
                 />
                 {mode === 'edit' && (
                     <div className="form-text">El nombre de usuario no se puede modificar</div>
@@ -87,7 +88,7 @@ const UserForm = ({ user, onSave, onCancel, mode = 'edit' }) => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    disabled={mode === 'edit'} 
+                    disabled={mode === 'edit'} // No editable en modo edición
                 />
                 {mode === 'edit' && (
                     <div className="form-text">El email no se puede modificar</div>

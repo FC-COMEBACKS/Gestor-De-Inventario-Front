@@ -12,12 +12,14 @@ const AuthGuard = ({ children, requireAuth = false, redirectTo = '/auth' }) => {
     useEffect(() => {
         if (!loading && !hasRedirected.current) {
             if (requireAuth && !user) {
+              
                 hasRedirected.current = true;
                 navigate(redirectTo, { replace: true });
                 return;
             } 
             
             if (!requireAuth && user && (location.pathname === '/auth' || location.pathname === '/')) {
+                
                 hasRedirected.current = true;
                 const redirectPath = getRedirectPath(user);
                 navigate(redirectPath, { replace: true });
@@ -43,6 +45,7 @@ const AuthGuard = ({ children, requireAuth = false, redirectTo = '/auth' }) => {
             </div>
         );
     }
+
     if (requireAuth && !user) {
         return null;
     }

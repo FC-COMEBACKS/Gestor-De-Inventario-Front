@@ -34,7 +34,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
                 [name]: value
             }));
         }
-
+        
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,

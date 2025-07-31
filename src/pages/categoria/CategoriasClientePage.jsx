@@ -22,6 +22,7 @@ const CategoriasClientePage = () => {
 
     return (
         <div className="container-fluid p-4">
+            {}
             <div className="row mb-4">
                 <div className="col-12">
                     <h1 className="display-6 mb-2">🏷️ Categorías de Productos</h1>
@@ -29,6 +30,7 @@ const CategoriasClientePage = () => {
                 </div>
             </div>
 
+            {}
             {loading && (
                 <div className="text-center py-4">
                     <div className="spinner-border text-primary" role="status">
@@ -38,12 +40,14 @@ const CategoriasClientePage = () => {
                 </div>
             )}
 
+            {}
             {error && (
                 <div className="alert alert-danger" role="alert">
                     <strong>Error:</strong> {error}
                 </div>
             )}
 
+            {}
             {!loading && !error && (
                 <div className="row">
                     {categorias.length > 0 ? (
@@ -51,18 +55,22 @@ const CategoriasClientePage = () => {
                             <div key={categoria.uid || categoria._id} className="col-lg-4 col-md-6 mb-4">
                                 <Card className="h-100 categoria-card" onClick={() => handleCategoryClick(categoria)}>
                                     <div className="card-body text-center d-flex flex-column">
+                                        {}
                                         <div className="mb-3" style={{ fontSize: '3rem' }}>
                                             📂
                                         </div>
                                         
+                                        {}
                                         <h4 className="card-title mb-3">
                                             {categoria.nombre}
                                         </h4>
                                         
+                                        {}
                                         <p className="card-text text-muted flex-grow-1">
                                             {categoria.descripcion || 'Categoría de productos disponibles en nuestro inventario'}
                                         </p>
                                         
+                                        {}
                                         <div className="mt-auto">
                                             <button 
                                                 className="btn btn-primary"

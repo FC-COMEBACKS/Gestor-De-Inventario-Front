@@ -4,7 +4,6 @@ export { default as DeleteButton } from './DeleteButton';
 export { default as EditButton } from './EditButton';
 export { default as SaveButton } from './SaveButton';
 export { ErrorBoundary, default as ErrorBoundaryDefault } from './ErrorBoundary';
-
 export * from './auth';
 export * from './ui';
 export * from './layout';
