@@ -145,3 +145,80 @@ export const eliminarCuenta = async (uid, data) => {
         }
     }
 }
+
+export const agregarProductoAlCarrito = async (data) => {
+    try {
+        const response = await api.post("/carritoDeCompras/agregarProducto", data);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const listarProductosCarrito = async () => {
+    try {
+        const response = await api.get("/carritoDeCompras/listarCarrito");
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const eliminarProductoDelCarrito = async (idProducto) => {
+    console.log('🗑️ API - Eliminar producto del carrito');
+    console.log('🎯 ID recibido (idProducto):', idProducto);
+    
+    if (!idProducto || idProducto === '' || idProducto === null || idProducto === undefined) {
+        console.error('❌ ID inválido');
+        return {
+            error: true,
+            err: new Error('ID de producto inválido')
+        };
+    }
+    
+    const userDetails = localStorage.getItem("user");
+    if (userDetails) {
+        try {
+            const parsedUser = JSON.parse(userDetails);
+            const userId = parsedUser?.userDetails?.uid || parsedUser?.uid;
+            console.log('👤 Usuario:', parsedUser?.userDetails?.nombre || 'Sin nombre');
+            console.log('🆔 User ID:', userId);
+        } catch (err) {
+            console.warn('⚠️ Error al parsear usuario:', err);
+        }
+    }
+    
+    try {
+        console.log('📡 Enviando DELETE request...');
+        console.log('📦 ID del producto a eliminar:', idProducto);
+        console.log('🔗 URL:', '/carritoDeCompras/eliminarProducto');
+        
+        const response = await api.delete("/carritoDeCompras/eliminarProducto", {
+            data: { idProducto }
+        });
+        
+        console.log('✅ ÉXITO - Status:', response.status);
+        console.log('✅ ÉXITO - Mensaje:', response.data?.message);
+        
+        return response;
+        
+    } catch (err) {
+        console.error('❌ ERROR - Status:', err.response?.status);
+        console.error('❌ ERROR - Mensaje:', err.response?.data?.message || err.message);
+        console.error('❌ ERROR - URL:', err.config?.url);
+        console.error('❌ ERROR - Method:', err.config?.method);
+        console.error('❌ ERROR - Data enviada:', err.config?.data);
+        console.error('❌ ERROR - Response completa:', err.response?.data);
+        
+        return {
+            error: true,
+            err
+        };
+    }
+}

@@ -23,6 +23,10 @@ export const routes = [
     element: <ProtectedRoute element={<DashboardUserPage />} />
   },
   {
+    path: '/carrito',
+    element: <ProtectedRoute element={<CarritoPage />} />
+  },
+  {
     path: '/usuarios',
     element: <ProtectedRoute element={<UserPage />} adminOnly={true} />
   },
