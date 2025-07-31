@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCategorias } from '../../shared/hooks';
-import { Card } from '../../components/ui';
+import { Card, Button } from '../../components/ui';
+import { navigateToDashboard } from '../../shared/utils';
 
 const CategoriasClientePage = () => {
     const navigate = useNavigate();
@@ -25,8 +26,19 @@ const CategoriasClientePage = () => {
             {}
             <div className="row mb-4">
                 <div className="col-12">
-                    <h1 className="display-6 mb-2">🏷️ Categorías de Productos</h1>
-                    <p className="text-muted">Explora nuestros productos por categoría</p>
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <h1 className="display-6 mb-2">🏷️ Categorías de Productos</h1>
+                            <p className="text-muted">Explora nuestros productos por categoría</p>
+                        </div>
+                        <Button 
+                            variant="outline-secondary"
+                            onClick={() => navigateToDashboard(navigate)}
+                            className="btn-sm"
+                        >
+                            ← Menú Principal
+                        </Button>
+                    </div>
                 </div>
             </div>
 

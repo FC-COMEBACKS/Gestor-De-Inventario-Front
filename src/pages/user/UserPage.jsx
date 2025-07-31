@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useUsers } from '../../shared/hooks';
 import { UserList, UserForm } from '../../components/user';
 import { Modal } from '../../components/ui';
 import { Pagination } from '../../components/categoria';
+import { navigateToDashboard } from '../../shared/utils';
 
 const UserPage = () => {
+    const navigate = useNavigate();
     const {
         usuarios,
         loading,
@@ -160,7 +163,15 @@ const UserPage = () => {
     return (
         <div className="container-fluid p-4">
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Gestión de Usuarios</h2>
+                <div className="d-flex align-items-center gap-3">
+                    <button 
+                        className="btn btn-outline-secondary"
+                        onClick={() => navigateToDashboard(navigate)}
+                    >
+                        ← Menú Principal
+                    </button>
+                    <h2>Gestión de Usuarios</h2>
+                </div>
                 <button 
                     className="btn btn-primary"
                     onClick={refrescar}

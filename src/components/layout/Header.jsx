@@ -94,7 +94,7 @@ const Header = () => {
                                         </span>
                                     )}
                                 </a>
-                                <a href="/mis-compras" className={styles.navLink}>
+                                <a href="/facturas" className={styles.navLink}>
                                     <span>📋</span>
                                     Mis Compras
                                 </a>

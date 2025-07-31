@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Input, Select } from '../../components/ui';
 import { ProductoList, ProductoModal } from '../../components/productos';
 import { useProductos } from '../../shared/hooks';
 import { useAuth } from '../../shared/hooks';
 import { useCategorias } from '../../shared/hooks';
+import { navigateToDashboard } from '../../shared/utils';
 
 const ProductosPage = () => {
+    const navigate = useNavigate();
     const { user } = useAuth();
     const { 
         productos, 
@@ -208,9 +211,18 @@ const ProductosPage = () => {
         <div className="container-fluid py-4">
             {}
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h1 className="h2 mb-1">Productos</h1>
-                    <p className="text-muted">Gestiona el inventario de productos</p>
+                <div className="d-flex align-items-center gap-3">
+                    <Button 
+                        variant="outline-secondary"
+                        onClick={() => navigateToDashboard(navigate)}
+                        className="me-3"
+                    >
+                        ← Menú Principal
+                    </Button>
+                    <div>
+                        <h1 className="h2 mb-1">Productos</h1>
+                        <p className="text-muted">Gestiona el inventario de productos</p>
+                    </div>
                 </div>
                 {isAdmin && (
                     <Button onClick={() => handleOpenModal('create')}>

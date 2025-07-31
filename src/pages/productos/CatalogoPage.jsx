@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useProductos, useCategorias } from '../../shared/hooks';
 import { Input, Select, Button } from '../../components/ui';
 import { ProductoCatalogCard } from '../../components/productos';
+import { navigateToDashboard } from '../../shared/utils';
 
 const CatalogoPage = () => {
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const { 
         productos, 
         loading, 
@@ -117,11 +119,22 @@ const CatalogoPage = () => {
 
     return (
         <div className="container-fluid p-4">
-            {}
+            {/* Header */}
             <div className="row mb-4">
                 <div className="col-12">
-                    <h1 className="display-6 mb-2">🛒 Catálogo de Productos</h1>
-                    <p className="text-muted">Descubre nuestros productos disponibles</p>
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <h1 className="display-6 mb-2">🛒 Catálogo de Productos</h1>
+                            <p className="text-muted">Descubre nuestros productos disponibles</p>
+                        </div>
+                        <Button 
+                            variant="outline-secondary"
+                            onClick={() => navigateToDashboard(navigate)}
+                            className="btn-sm"
+                        >
+                            ← Menú Principal
+                        </Button>
+                    </div>
                 </div>
             </div>
 

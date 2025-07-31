@@ -1,10 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import CategoriaList from '../../components/categoria/CategoriaList';
 import Pagination from '../../components/categoria/Pagination';
 import { useCategorias } from '../../shared/hooks/useCategorias';
 import { LoadingSpinner } from '../../components';
+import { navigateToDashboard } from '../../shared/utils';
 
 const CategoriaPage = () => {
+    const navigate = useNavigate();
     const {
         categorias,
         loading,
@@ -76,9 +79,17 @@ const CategoriaPage = () => {
             <div className="row">
                 <div className="col-12">
                     <div className="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                            <h1 className="h3 mb-0">Gestión de Categorías</h1>
-                            <p className="text-muted">Administra las categorías de productos</p>
+                        <div className="d-flex align-items-center gap-3">
+                            <button 
+                                className="btn btn-outline-secondary"
+                                onClick={() => navigateToDashboard(navigate)}
+                            >
+                                ← Menú Principal
+                            </button>
+                            <div>
+                                <h1 className="h3 mb-0">Gestión de Categorías</h1>
+                                <p className="text-muted">Administra las categorías de productos</p>
+                            </div>
                         </div>
                         <button 
                             className="btn btn-outline-primary"

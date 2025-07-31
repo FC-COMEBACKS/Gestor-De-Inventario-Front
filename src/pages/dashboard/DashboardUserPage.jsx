@@ -70,7 +70,7 @@ const DashboardUserPage = () => {
                         <p>Revisa los productos que has agregado a tu carrito</p>
                     </div>
 
-                    <div className="menu-card" onClick={() => handleNavigation('/mis-compras')}>
+                    <div className="menu-card" onClick={() => handleNavigation('/facturas')}>
                         <div className="menu-icon">🧾</div>
                         <h3>Mis Compras</h3>
                         <p>Historial de tus facturas y compras realizadas</p>

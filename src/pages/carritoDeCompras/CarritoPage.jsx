@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CarritoList, CarritoSummary } from '../../components/carritoDeCompras';
 import { useCarritoDeCompras, useFacturas } from '../../shared/hooks';
+import { navigateToDashboard } from '../../shared/utils';
 
 const CarritoPage = () => {
     const navigate = useNavigate();
@@ -106,11 +107,18 @@ const CarritoPage = () => {
                                 Sincronizar
                             </button>
                             <button 
-                                className="btn btn-outline-secondary"
+                                className="btn btn-outline-primary"
                                 onClick={() => navigate('/catalogo')}
                             >
                                 <i className="fas fa-arrow-left me-2"></i>
                                 Continuar Comprando
+                            </button>
+                            <button 
+                                className="btn btn-outline-secondary"
+                                onClick={() => navigateToDashboard(navigate)}
+                            >
+                                <i className="fas fa-home me-2"></i>
+                                Menú Principal
                             </button>
                         </div>
                     </div>

@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FacturaList } from '../../components/factura';
 import { Button } from '../../components/ui/Button';
 import { Select } from '../../components/ui/Select';
 import { procesarCompra, listarUsuarios } from '../../services/api';
+import { navigateToDashboard } from '../../shared/utils';
 import './FacturaPage.css';
 
 export const FacturaPage = () => {
+    const navigate = useNavigate();
     const [userRole, setUserRole] = useState('');
     const [users, setUsers] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState('');
@@ -84,7 +87,16 @@ export const FacturaPage = () => {
         <div className="factura-page">
             <div className="factura-page-header">
                 <div className="header-content">
-                    <h1>📄 Gestión de Facturas</h1>
+                    <div className="title-with-nav">
+                        <Button 
+                            variant="outline" 
+                            onClick={() => navigateToDashboard(navigate)}
+                            className="back-button"
+                        >
+                            ← Menú Principal
+                        </Button>
+                        <h1>📄 Gestión de Facturas</h1>
+                    </div>
                     <p>Administra y revisa todas las facturas del sistema</p>
                 </div>
 

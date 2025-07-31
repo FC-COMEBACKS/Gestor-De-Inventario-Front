@@ -154,24 +154,15 @@ const DashboardAdminPage = () => {
                     </div>
 
                     <div className="action-card">
-                        <div className="action-icon">📊</div>
-                        <h3>Ver Reportes</h3>
-                        <p>Analiza las estadísticas de tu negocio</p>
-                        <button className="action-btn success">Ver Reportes</button>
-                    </div>
-
-                    <div className="action-card">
                         <div className="action-icon">🧾</div>
                         <h3>Facturas</h3>
                         <p>Gestionar facturas y ventas</p>
-                        <button className="action-btn warning">Ir a Facturas</button>
-                    </div>
-
-                    <div className="action-card">
-                        <div className="action-icon">⚙️</div>
-                        <h3>Configuración</h3>
-                        <p>Ajustes del sistema y configuración</p>
-                        <button className="action-btn dark">Configurar</button>
+                        <button 
+                            className="action-btn warning"
+                            onClick={() => navigate('/facturas')}
+                        >
+                            Ir a Facturas
+                        </button>
                     </div>
                 </div>
             </div>
