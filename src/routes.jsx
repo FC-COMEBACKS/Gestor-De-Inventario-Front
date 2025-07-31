@@ -35,6 +35,10 @@ export const routes = [
     element: <ProtectedRoute element={<CategoriasClientePage />} />
   },
   {
+    path: '/productos',
+    element: <ProtectedRoute element={<ProductosPage />} adminOnly={true} />
+  },
+  {
     path: '/usuarios',
     element: <ProtectedRoute element={<UserPage />} adminOnly={true} />
   },

@@ -268,3 +268,113 @@ export const eliminarCategoria = async (uid) => {
         }
     }
 }
+
+export const listarProductos = async () => {
+    try {
+        const response = await api.get("/producto/ListarProductos");
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const obtenerProductoPorId = async (id) => {
+    try {
+        const response = await api.get(`/producto/listarProductoPorId/${id}`);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const crearProducto = async (data) => {
+    try {
+        const response = await api.post("/producto/agregarProducto", data);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const actualizarProducto = async (id, data) => {
+    try {
+        const response = await api.put(`/producto/actualizarProducto/${id}`, data);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const eliminarProducto = async (id) => {
+    try {
+        const response = await api.delete(`/producto/eliminarProducto/${id}`);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const obtenerProductosAgotados = async () => {
+    try {
+        const response = await api.get("/producto/productosAgotados");
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const obtenerProductosMasVendidos = async () => {
+    try {
+        const response = await api.get("/producto/productosMasVendidos");
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const buscarProductosPorNombre = async (nombreProducto) => {
+    try {
+        const response = await api.post("/producto/buscarProductosPorNombre", {
+            nombreProducto: nombreProducto
+        });
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
+
+export const obtenerProductosPorCategoria = async (categoriaId) => {
+    try {
+        const response = await api.get(`/producto/productosPorCategoria/${categoriaId}`);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+}
